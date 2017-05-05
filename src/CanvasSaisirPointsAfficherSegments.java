@@ -1,3 +1,6 @@
+import geometry.Point;
+import geometry.SweepLine;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -5,10 +8,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Vector;
 
+
 /** La classe CanvasSaisirPointsAfficherSegments. */
 class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener, MouseMotionListener {
     /** La liste des points affiches. */
-    Vector<geometry.Point> points;
+    Vector<Point> points;
 
     /** La liste des segments affiches. */
     //Vector<Segment> segments;
@@ -16,11 +20,12 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     /** Le numero du point selectionne. */
     private int numSelectedPoint;
 
+    SweepLine sweepLine;
+
+    private final Color sweepLineColor = Color.RED;
+
     /** La couleur d'un point a l'ecran. */
     private final Color pointColor = Color.GRAY;
-
-    /** La couleur d'un segment a l'ecran. */
-    private final Color segmentColor = Color.BLUE;
 
     /** La couleur d'un point selectionne a l'ecran. */
     private final Color selectedPointColor = Color.RED;
@@ -36,6 +41,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
 
         // Creation du vecteur de segments
         //segments = new Vector<>();
+        sweepLine = new SweepLine();
 
         // Initialisation du point selectionne
         numSelectedPoint = -1;
@@ -54,7 +60,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
         g.clearRect(0,0,getWidth(),getHeight());
 
         // Dessin des segments
-        //drawSegments(g);
+        drawSweepLine(g);
 
         // Dessin des points
         drawPoints(g);
@@ -63,7 +69,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
     /** Affichage des points. */
     private void drawPoints(Graphics g) {
         for (int n = 0; n < points.size(); n++) {
-            geometry.Point p = points.elementAt(n);
+            Point p = points.elementAt(n);
 
             if ( n == numSelectedPoint )
                 g.setColor(selectedPointColor);
@@ -76,21 +82,18 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
         }
     }
 
-    /** Affichage des segments.
+    /** Affichage de la ligne de balayage
      */
-    /*private void drawSegments(Graphics g) {
-        for (int n = 0; n < segments.size(); n++) {
-            Segment segment = segments.elementAt(n);
-            g.setColor(segmentColor);
-            g.drawLine((int)segment.a.x,(int)segment.a.y,(int)segment.b.x,(int)segment.b.y);
-        }
-    }*/
+    private void drawSweepLine(Graphics g) {
+        g.setColor(sweepLineColor);
+        g.drawLine((int)sweepLine.value, 0,(int)sweepLine.value, getHeight());
+    }
 
     /** Retourne le numero du point situe en (x,y). */
     private int getNumSelectedPoint(int x, int y) {
         for(int n = 0; n < points.size(); n++)
         {
-            geometry.Point p = points.elementAt(n);
+            Point p = points.elementAt(n);
             if
                     (
                     p.x > x - 2 * POINT_SIZE &&
@@ -114,7 +117,7 @@ class CanvasSaisirPointsAfficherSegments extends JPanel implements MouseListener
             if (numSelectedPoint == -1)
             {
                 numSelectedPoint = points.size();
-                points.addElement(new geometry.Point(evt.getX(), evt.getY()));
+                points.addElement(new Point(evt.getX(), evt.getY()));
                 repaint();
             }
         }
