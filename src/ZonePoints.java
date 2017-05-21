@@ -35,10 +35,10 @@ class ZonePoints extends JPanel  {
 
         JPanel panelScroll = new JPanel();
 
-        JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL, 0, 0, 0, 100);
+        JScrollBar scrollBar = new JScrollBar(JScrollBar.HORIZONTAL, 0, 0, 0, 1000);
         scrollBar.setPreferredSize(new Dimension(500, 30));
         scrollBar.addAdjustmentListener(e -> {
-            double value = e.getValue() * canvas.getWidth() / 100;
+            double value = e.getValue() * canvas.getWidth() / 1000;
             canvas.sweepLine.setPointValue(value);
             canvas.repaint();
         });
